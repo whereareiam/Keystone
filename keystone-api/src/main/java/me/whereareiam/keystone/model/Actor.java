@@ -1,5 +1,6 @@
 package me.whereareiam.keystone.model;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,4 +53,13 @@ public interface Actor {
 	 */
 	@NotNull
 	Locale getLocale();
+
+	/**
+	 * Gets the underlying Adventure Audience for this actor.
+	 * Used for integration with Adventure API and messaging frameworks.
+	 *
+	 * @return The Adventure audience
+	 */
+	@NotNull
+	Audience getAudience();
 }
