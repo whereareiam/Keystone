@@ -75,5 +75,35 @@ public interface SerializerEngine {
 	default void send(@NotNull Actor actor, @NotNull String message, @NotNull Consumer<SerializerContent.Builder> customizer) {
 		actor.sendMessage(serialize(actor, message, customizer));
 	}
+
+	/**
+	 * Serializes a message without requiring a receiver actor.
+	 * Useful for messages that don't need actor-specific placeholders like {playerName} or {prefix}.
+	 *
+	 * @param message The message template
+	 * @return The serialized Component
+	 */
+	@NotNull
+	default Component serialize(@NotNull String message) {
+		return serialize(SerializerContent.builder()
+				.message(message)
+				.build());
+	}
+
+	/**
+	 * Serializes a message with custom placeholders without requiring a receiver actor.
+	 *
+	 * @param message    The message template
+	 * @param customizer Consumer to customize the SerializerContent builder
+	 * @return The serialized Component
+	 */
+	@NotNull
+	default Component serialize(@NotNull String message, @NotNull Consumer<SerializerContent.Builder> customizer) {
+		SerializerContent.Builder builder = SerializerContent.builder()
+				.message(message);
+		customizer.accept(builder);
+
+		return serialize(builder.build());
+	}
 }
 

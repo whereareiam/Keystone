@@ -12,7 +12,8 @@ import java.util.Map;
  * This is the data structure that flows through the serialization pipeline.
  */
 @SuppressWarnings("unused")
-public final class SerializerContent {
+	public final class SerializerContent {
+	@Nullable
 	private final Actor receiver;
 	private final Map<String, String> placeholders;
 	private String message;
@@ -26,9 +27,9 @@ public final class SerializerContent {
 	/**
 	 * Gets the actor receiving this message.
 	 *
-	 * @return The receiver actor
+	 * @return The receiver actor, or null if no actor is set
 	 */
-	@NotNull
+	@Nullable
 	public Actor getReceiver() {
 		return receiver;
 	}
@@ -107,11 +108,11 @@ public final class SerializerContent {
 		/**
 		 * Sets the receiver actor.
 		 *
-		 * @param receiver The actor receiving the message
+		 * @param receiver The actor receiving the message (can be null)
 		 * @return This builder
 		 */
 		@NotNull
-		public Builder receiver(@NotNull Actor receiver) {
+		public Builder receiver(@Nullable Actor receiver) {
 			this.receiver = receiver;
 			return this;
 		}
@@ -157,13 +158,9 @@ public final class SerializerContent {
 		 * Builds the SerializerContent instance.
 		 *
 		 * @return The built SerializerContent
-		 * @throws IllegalStateException if receiver is not set
 		 */
 		@NotNull
 		public SerializerContent build() {
-			if (receiver == null) {
-				throw new IllegalStateException("Receiver must be set");
-			}
 			return new SerializerContent(this);
 		}
 	}
