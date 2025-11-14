@@ -1,4 +1,4 @@
-package me.whereareiam.keystone.model;
+package me.whereareiam.keystone;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;

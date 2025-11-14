@@ -1,0 +1,171 @@
+package me.whereareiam.keystone.model;
+
+import me.whereareiam.keystone.Actor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Represents the content to be serialized, containing message, actor context, and placeholders.
+ * This is the data structure that flows through the serialization pipeline.
+ */
+@SuppressWarnings("unused")
+public final class SerializerContent {
+	private final Actor receiver;
+	private final Map<String, String> placeholders;
+	private String message;
+
+	private SerializerContent(@NotNull Builder builder) {
+		this.receiver = builder.receiver;
+		this.placeholders = new HashMap<>(builder.placeholders);
+		this.message = builder.message;
+	}
+
+	/**
+	 * Gets the actor receiving this message.
+	 *
+	 * @return The receiver actor
+	 */
+	@NotNull
+	public Actor getReceiver() {
+		return receiver;
+	}
+
+	/**
+	 * Gets the message template to be serialized.
+	 *
+	 * @return The message template
+	 */
+	@NotNull
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * Sets the message template.
+	 *
+	 * @param message The new message template
+	 */
+	public void setMessage(@NotNull String message) {
+		this.message = message;
+	}
+
+	/**
+	 * Gets all registered placeholders.
+	 *
+	 * @return A map of placeholder keys to their values
+	 */
+	@NotNull
+	public Map<String, String> getPlaceholders() {
+		return new HashMap<>(placeholders);
+	}
+
+	/**
+	 * Adds a placeholder to be replaced during serialization.
+	 *
+	 * @param key   The placeholder key (e.g., "{coins}")
+	 * @param value The value to replace it with
+	 */
+	public void addPlaceholder(@NotNull String key, @NotNull String value) {
+		placeholders.put(key, value);
+	}
+
+	/**
+	 * Gets a placeholder value by key.
+	 *
+	 * @param key The placeholder key
+	 * @return The placeholder value, or null if not found
+	 */
+	@Nullable
+	public String getPlaceholder(@NotNull String key) {
+		return placeholders.get(key);
+	}
+
+	/**
+	 * Creates a new builder for SerializerContent.
+	 *
+	 * @return A new builder instance
+	 */
+	@NotNull
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	/**
+	 * Builder for creating SerializerContent instances.
+	 */
+	public static final class Builder {
+		private Actor receiver;
+		private final Map<String, String> placeholders = new HashMap<>();
+		private String message = "";
+
+		private Builder() {
+		}
+
+		/**
+		 * Sets the receiver actor.
+		 *
+		 * @param receiver The actor receiving the message
+		 * @return This builder
+		 */
+		@NotNull
+		public Builder receiver(@NotNull Actor receiver) {
+			this.receiver = receiver;
+			return this;
+		}
+
+		/**
+		 * Sets the message template.
+		 *
+		 * @param message The message template
+		 * @return This builder
+		 */
+		@NotNull
+		public Builder message(@NotNull String message) {
+			this.message = message;
+			return this;
+		}
+
+		/**
+		 * Adds a placeholder to be replaced.
+		 *
+		 * @param key   The placeholder key (e.g., "{coins}")
+		 * @param value The value to replace it with
+		 * @return This builder
+		 */
+		@NotNull
+		public Builder placeholder(@NotNull String key, @NotNull String value) {
+			this.placeholders.put(key, value);
+			return this;
+		}
+
+		/**
+		 * Adds multiple placeholders at once.
+		 *
+		 * @param placeholders Map of placeholder keys to values
+		 * @return This builder
+		 */
+		@NotNull
+		public Builder placeholders(@NotNull Map<String, String> placeholders) {
+			this.placeholders.putAll(placeholders);
+			return this;
+		}
+
+		/**
+		 * Builds the SerializerContent instance.
+		 *
+		 * @return The built SerializerContent
+		 * @throws IllegalStateException if receiver is not set
+		 */
+		@NotNull
+		public SerializerContent build() {
+			if (receiver == null) {
+				throw new IllegalStateException("Receiver must be set");
+			}
+			return new SerializerContent(this);
+		}
+	}
+}
+

@@ -1,4 +1,4 @@
-package me.whereareiam.keystone.model;
+package me.whereareiam.keystone;
 
 /**
  * Represents a player in the game.
