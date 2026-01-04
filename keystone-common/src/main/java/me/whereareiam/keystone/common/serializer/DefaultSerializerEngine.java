@@ -70,10 +70,12 @@ public final class DefaultSerializerEngine implements SerializerEngine {
 			if (decorator.isAvailable())
 				content = decorator.decorate(content);
 
-		// Apply placeholders
+		// Apply placeholders with configured format
 		String message = content.getMessage();
-		for (Map.Entry<String, String> entry : content.getPlaceholders().entrySet())
-			message = message.replace(entry.getKey(), entry.getValue());
+		for (Map.Entry<String, String> entry : content.getPlaceholders().entrySet()) {
+			String formattedPlaceholder = options.getPlaceholderFormat().format(entry.getKey());
+			message = message.replace(formattedPlaceholder, entry.getValue());
+		}
 
 		SerializerAdapter adapter = getAdapter(options.getDefaultAdapterId());
 

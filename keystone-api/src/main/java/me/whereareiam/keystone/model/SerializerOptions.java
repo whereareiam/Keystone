@@ -17,12 +17,15 @@ public final class SerializerOptions {
 	private final boolean enableLegacyColors;
 	@Getter
 	private final boolean enablePlayerNamePlaceholder;
+	@Getter
+	private final PlaceholderFormat placeholderFormat;
 
 	private SerializerOptions(@NotNull Builder builder) {
 		this.defaultAdapterId = builder.defaultAdapterId;
 		this.prefixSupplier = builder.prefixSupplier;
 		this.enableLegacyColors = builder.enableLegacyColors;
 		this.enablePlayerNamePlaceholder = builder.enablePlayerNamePlaceholder;
+		this.placeholderFormat = builder.placeholderFormat;
 	}
 
 	/**
@@ -68,6 +71,7 @@ public final class SerializerOptions {
 				.prefixSupplier(prefixSupplier)
 				.enableLegacyColors(true)
 				.enablePlayerNamePlaceholder(true)
+				.placeholderFormat(PlaceholderFormat.CURLY_BRACES)
 				.build();
 	}
 
@@ -79,6 +83,7 @@ public final class SerializerOptions {
 		private Supplier<String> prefixSupplier;
 		private boolean enableLegacyColors = true;
 		private boolean enablePlayerNamePlaceholder = true;
+		private PlaceholderFormat placeholderFormat = PlaceholderFormat.CURLY_BRACES;
 
 		private Builder() {
 		}
@@ -143,6 +148,25 @@ public final class SerializerOptions {
 		}
 
 		/**
+		 * Sets the placeholder format to use for placeholder replacement.
+		 * <p>
+		 * Examples:
+		 * <ul>
+		 *   <li>CURLY_BRACES: {placeholder}</li>
+		 *   <li>PERCENT: %placeholder%</li>
+		 *   <li>DOLLAR: $placeholder</li>
+		 * </ul>
+		 *
+		 * @param format The placeholder format
+		 * @return This builder
+		 */
+		@NotNull
+		public Builder placeholderFormat(@NotNull PlaceholderFormat format) {
+			this.placeholderFormat = format;
+			return this;
+		}
+
+		/**
 		 * Builds the SerializerOptions instance.
 		 *
 		 * @return The built SerializerOptions
@@ -150,6 +174,77 @@ public final class SerializerOptions {
 		@NotNull
 		public SerializerOptions build() {
 			return new SerializerOptions(this);
+		}
+	}
+
+	/**
+	 * Defines the format for placeholder replacement.
+	 */
+	public static class PlaceholderFormat {
+		/**
+		 * Curly braces format: {placeholder}
+		 */
+		public static final PlaceholderFormat CURLY_BRACES = new PlaceholderFormat("{", "}");
+
+		/**
+		 * Percent format: %placeholder%
+		 */
+		public static final PlaceholderFormat PERCENT = new PlaceholderFormat("%", "%");
+
+		/**
+		 * Dollar format: $placeholder
+		 */
+		public static final PlaceholderFormat DOLLAR = new PlaceholderFormat("$", "");
+
+		private final String prefix;
+		private final String suffix;
+
+		private PlaceholderFormat(String prefix, String suffix) {
+			this.prefix = prefix;
+			this.suffix = suffix;
+		}
+
+		/**
+		 * Gets the prefix for this placeholder format.
+		 *
+		 * @return The prefix string
+		 */
+		@NotNull
+		public String getPrefix() {
+			return prefix;
+		}
+
+		/**
+		 * Gets the suffix for this placeholder format.
+		 *
+		 * @return The suffix string
+		 */
+		@NotNull
+		public String getSuffix() {
+			return suffix;
+		}
+
+		/**
+		 * Formats a placeholder name with this format.
+		 *
+		 * @param placeholderName The placeholder name (e.g., "content")
+		 * @return The formatted placeholder (e.g., "{content}", "$content", "%content%")
+		 */
+		@NotNull
+		public String format(@NotNull String placeholderName) {
+			return prefix + placeholderName + suffix;
+		}
+
+		/**
+		 * Creates a custom placeholder format.
+		 *
+		 * @param prefix The prefix (e.g., "{{", "<", "$")
+		 * @param suffix The suffix (e.g., "}}", ">", "")
+		 * @return A custom PlaceholderFormat
+		 */
+		@NotNull
+		public static PlaceholderFormat custom(@NotNull String prefix, @NotNull String suffix) {
+			return new PlaceholderFormat(prefix, suffix);
 		}
 	}
 }
