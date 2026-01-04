@@ -1,6 +1,5 @@
 package me.whereareiam.keystone.common.serializer.decorator;
 
-import me.whereareiam.keystone.Player;
 import me.whereareiam.keystone.model.SerializerContent;
 import me.whereareiam.keystone.serializer.MessageDecorator;
 import org.jetbrains.annotations.NotNull;
@@ -12,8 +11,10 @@ public final class PlayerNameDecorator implements MessageDecorator {
 	@Override
 	@NotNull
 	public SerializerContent decorate(@NotNull SerializerContent content) {
-		if (content.getReceiver() instanceof Player player)
-			content.setMessage(content.getMessage().replace("{playerName}", player.getUsername()));
+		if (content.getReceiver() == null)
+			return content;
+
+		content.setMessage(content.getMessage().replace("{playerName}", content.getReceiver().getUsername()));
 
 		return content;
 	}
