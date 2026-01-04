@@ -39,7 +39,7 @@ public final class SerializerOptions {
 	}
 
 	/**
-	 * Gets the prefix supplier for {prefix} placeholder injection.
+	 * Gets the prefix supplier for prefix placeholder injection.
 	 *
 	 * @return The prefix supplier, or null if prefix injection is disabled
 	 */
@@ -101,7 +101,7 @@ public final class SerializerOptions {
 		}
 
 		/**
-		 * Sets the prefix supplier for {prefix} placeholder injection.
+		 * Sets the prefix supplier for prefix placeholder injection.
 		 *
 		 * @param prefixSupplier Supplier that provides the prefix string
 		 * @return This builder
@@ -136,7 +136,7 @@ public final class SerializerOptions {
 		}
 
 		/**
-		 * Enables or disables automatic {playerName} placeholder injection.
+		 * Enables or disables automatic playerName placeholder injection.
 		 *
 		 * @param enable true to enable player name placeholder
 		 * @return This builder

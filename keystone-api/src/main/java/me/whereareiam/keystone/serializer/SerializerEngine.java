@@ -2,6 +2,7 @@ package me.whereareiam.keystone.serializer;
 
 import me.whereareiam.keystone.Actor;
 import me.whereareiam.keystone.model.SerializerContent;
+import me.whereareiam.keystone.model.SerializerOptions;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +25,7 @@ public interface SerializerEngine {
 
 	/**
 	 * Convenience method to serialize a message for an actor.
-	 * Automatically handles {prefix} and {playerName} placeholders.
+	 * Automatically handles prefix and playerName placeholders.
 	 *
 	 * @param actor   The actor to serialize the message for
 	 * @param message The message template
@@ -78,7 +79,7 @@ public interface SerializerEngine {
 
 	/**
 	 * Serializes a message without requiring a receiver actor.
-	 * Useful for messages that don't need actor-specific placeholders like {playerName} or {prefix}.
+	 * Useful for messages that don't need actor-specific placeholders like playerName or prefix.
 	 *
 	 * @param message The message template
 	 * @return The serialized Component
@@ -104,6 +105,16 @@ public interface SerializerEngine {
 		customizer.accept(builder);
 
 		return serialize(builder.build());
+	}
+
+	/**
+	 * Gets the placeholder format used by this serializer.
+	 *
+	 * @return The placeholder format
+	 */
+	@NotNull
+	default SerializerOptions.PlaceholderFormat getPlaceholderFormat() {
+		return SerializerOptions.PlaceholderFormat.CURLY_BRACES;
 	}
 }
 

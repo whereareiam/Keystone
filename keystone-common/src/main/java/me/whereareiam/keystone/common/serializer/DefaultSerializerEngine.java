@@ -60,8 +60,8 @@ public final class DefaultSerializerEngine implements SerializerEngine {
 		return adapter;
 	}
 
-	@Override
 	@NotNull
+	@Override
 	public Component serialize(@NotNull SerializerContent content) {
 		if (content.getMessage().isEmpty()) return Component.empty();
 
@@ -80,6 +80,12 @@ public final class DefaultSerializerEngine implements SerializerEngine {
 		SerializerAdapter adapter = getAdapter(options.getDefaultAdapterId());
 
 		return adapter.deserialize(message, options.isEnableLegacyColors());
+	}
+
+	@NotNull
+	@Override
+	public SerializerOptions.PlaceholderFormat getPlaceholderFormat() {
+		return options.getPlaceholderFormat();
 	}
 }
 

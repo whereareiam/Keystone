@@ -66,7 +66,7 @@ import java.util.Map;
 	/**
 	 * Adds a placeholder to be replaced during serialization.
 	 *
-	 * @param key   The placeholder key (e.g., "{coins}")
+	 * @param key   The placeholder key (e.g., "coins")
 	 * @param value The value to replace it with
 	 */
 	public void addPlaceholder(@NotNull String key, @NotNull String value) {
@@ -132,7 +132,7 @@ import java.util.Map;
 		/**
 		 * Adds a placeholder to be replaced.
 		 *
-		 * @param key   The placeholder key (e.g., "{coins}")
+		 * @param key   The placeholder key (e.g., "coins")
 		 * @param value The value to replace it with
 		 * @return This builder
 		 */

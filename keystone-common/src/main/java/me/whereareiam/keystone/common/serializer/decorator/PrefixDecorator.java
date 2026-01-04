@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 
 /**
- * Decorator that injects {prefix} placeholder from a supplier.
+ * Decorator that injects the prefix placeholder from a supplier.
  */
 public final class PrefixDecorator implements MessageDecorator {
 	private final Supplier<String> prefixSupplier;
@@ -21,7 +21,7 @@ public final class PrefixDecorator implements MessageDecorator {
 	public SerializerContent decorate(@NotNull SerializerContent content) {
 		String prefix = prefixSupplier.get();
 		if (prefix != null && !prefix.isEmpty())
-			content.setMessage(content.getMessage().replace("{prefix}", prefix));
+			content.addPlaceholder("prefix", prefix);
 
 		return content;
 	}
