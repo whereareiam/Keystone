@@ -24,6 +24,15 @@ public interface SerializerEngine {
 	Component serialize(@NotNull SerializerContent content);
 
 	/**
+	 * Serializes a Component into a string using the configured adapter.
+	 *
+	 * @param component The Component to serialize
+	 * @return The serialized string
+	 */
+	@NotNull
+	String serialize(@NotNull Component component);
+
+	/**
 	 * Convenience method to serialize a message for an actor.
 	 * Automatically handles prefix and playerName placeholders.
 	 *

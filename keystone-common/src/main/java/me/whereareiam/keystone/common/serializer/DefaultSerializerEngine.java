@@ -84,6 +84,13 @@ public final class DefaultSerializerEngine implements SerializerEngine {
 
 	@NotNull
 	@Override
+	public String serialize(@NotNull Component component) {
+		SerializerAdapter adapter = getAdapter(options.getDefaultAdapterId());
+		return adapter.serialize(component);
+	}
+
+	@NotNull
+	@Override
 	public SerializerOptions.PlaceholderFormat getPlaceholderFormat() {
 		return options.getPlaceholderFormat();
 	}
