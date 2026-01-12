@@ -13,26 +13,39 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 	public final class SerializerContent {
-	@Nullable
-	private final Actor receiver;
-	private final Map<String, String> placeholders;
-	private String message;
+    @Nullable
+    private final Actor receiver;
+    @Nullable
+    private final String scope;
+    private final Map<String, String> placeholders;
+    private String message;
 
 	private SerializerContent(@NotNull Builder builder) {
-		this.receiver = builder.receiver;
-		this.placeholders = new HashMap<>(builder.placeholders);
-		this.message = builder.message;
-	}
+        this.receiver = builder.receiver;
+        this.scope = builder.scope;
+        this.placeholders = new HashMap<>(builder.placeholders);
+        this.message = builder.message;
+    }
 
 	/**
 	 * Gets the actor receiving this message.
 	 *
 	 * @return The receiver actor, or null if no actor is set
 	 */
-	@Nullable
-	public Actor getReceiver() {
-		return receiver;
-	}
+    @Nullable
+    public Actor getReceiver() {
+        return receiver;
+    }
+
+    /**
+     * Gets the optional scope for this message (e.g., module or feature name).
+     *
+     * @return The scope string, or null if no scope is set
+     */
+    @Nullable
+    public String getScope() {
+        return scope;
+    }
 
 	/**
 	 * Gets the message template to be serialized.
@@ -97,10 +110,11 @@ import java.util.Map;
 	/**
 	 * Builder for creating SerializerContent instances.
 	 */
-	public static final class Builder {
-		private Actor receiver;
-		private final Map<String, String> placeholders = new HashMap<>();
-		private String message = "";
+    public static final class Builder {
+        private Actor receiver;
+        private String scope;
+        private final Map<String, String> placeholders = new HashMap<>();
+        private String message = "";
 
 		private Builder() {
 		}
@@ -111,11 +125,23 @@ import java.util.Map;
 		 * @param receiver The actor receiving the message (can be null)
 		 * @return This builder
 		 */
-		@NotNull
-		public Builder receiver(@Nullable Actor receiver) {
-			this.receiver = receiver;
-			return this;
-		}
+        @NotNull
+        public Builder receiver(@Nullable Actor receiver) {
+            this.receiver = receiver;
+            return this;
+        }
+
+        /**
+         * Sets the optional scope for this message (e.g., module or feature name).
+         *
+         * @param scope The scope identifier
+         * @return This builder
+         */
+        @NotNull
+        public Builder scope(@Nullable String scope) {
+            this.scope = scope;
+            return this;
+        }
 
 		/**
 		 * Sets the message template.

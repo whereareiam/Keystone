@@ -15,15 +15,6 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public interface SerializerEngine {
 	/**
-	 * Serializes a message string into a Component using the configured adapter.
-	 *
-	 * @param content The serialization content containing message, actor, and placeholders
-	 * @return The serialized Component
-	 */
-	@NotNull
-	Component serialize(@NotNull SerializerContent content);
-
-	/**
 	 * Serializes a Component into a string using the configured adapter.
 	 *
 	 * @param component The Component to serialize
@@ -31,6 +22,15 @@ public interface SerializerEngine {
 	 */
 	@NotNull
 	String serialize(@NotNull Component component);
+
+	/**
+	 * Serializes a message string into a Component using the configured adapter.
+	 *
+	 * @param content The serialization content containing message, actor, and placeholders
+	 * @return The serialized Component
+	 */
+	@NotNull
+	Component serialize(@NotNull SerializerContent content);
 
 	/**
 	 * Convenience method to serialize a message for an actor.

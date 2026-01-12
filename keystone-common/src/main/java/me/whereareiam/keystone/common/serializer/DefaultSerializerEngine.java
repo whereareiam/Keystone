@@ -12,15 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Default implementation of SerializerEngine.
  * Handles the serialization pipeline: decorators -> placeholders -> adapter.
  */
 public final class DefaultSerializerEngine implements SerializerEngine {
-	private final Map<String, SerializerAdapter> adapters = new ConcurrentHashMap<>();
-	private final List<MessageDecorator> decorators = new ArrayList<>();
-	private final SerializerOptions options;
+    private final Map<String, SerializerAdapter> adapters = new ConcurrentHashMap<>();
+    private final List<MessageDecorator> decorators = new ArrayList<>();
+    private final Map<String, List<MessageDecorator>> scopedDecorators = new ConcurrentHashMap<>();
+    private final SerializerOptions options;
 
 	public DefaultSerializerEngine(@NotNull SerializerOptions options) {
 		this.options = options;
@@ -40,9 +42,21 @@ public final class DefaultSerializerEngine implements SerializerEngine {
 	 *
 	 * @param decorator The decorator to register
 	 */
-	public void addDecorator(@NotNull MessageDecorator decorator) {
-		decorators.add(decorator);
-	}
+    public void addDecorator(@NotNull MessageDecorator decorator) {
+        decorators.add(decorator);
+    }
+
+    /**
+     * Registers a decorator for a specific scope.
+     *
+     * @param scope     The scope identifier (e.g., module name)
+     * @param decorator The decorator to register
+     */
+    public void addDecorator(@NotNull String scope, @NotNull MessageDecorator decorator) {
+        scopedDecorators
+                .computeIfAbsent(scope, key -> new CopyOnWriteArrayList<>())
+                .add(decorator);
+    }
 
 	/**
 	 * Gets the adapter by ID, falling back to default if not found.
@@ -65,10 +79,22 @@ public final class DefaultSerializerEngine implements SerializerEngine {
 	public Component serialize(@NotNull SerializerContent content) {
 		if (content.getMessage().isEmpty()) return Component.empty();
 
-		// Apply decorators first (prefix injection, integrations, etc.)
-		for (MessageDecorator decorator : decorators)
-			if (decorator.isAvailable())
-				content = decorator.decorate(content);
+        // Apply decorators first (prefix injection, integrations, etc.)
+        for (MessageDecorator decorator : decorators)
+            if (decorator.isAvailable())
+                content = decorator.decorate(content);
+
+        // Apply scoped decorators (if scope is set)
+        String scope = content.getScope();
+        if (scope != null && !scope.isBlank()) {
+            List<MessageDecorator> scoped = scopedDecorators.get(scope);
+            if (scoped != null) {
+                for (MessageDecorator decorator : scoped) {
+                    if (decorator.isAvailable())
+                        content = decorator.decorate(content);
+                }
+            }
+        }
 
 		// Apply placeholders with configured format
 		String message = content.getMessage();

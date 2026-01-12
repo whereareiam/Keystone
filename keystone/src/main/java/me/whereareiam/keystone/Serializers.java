@@ -58,14 +58,34 @@ public final class Serializers {
 	 * @param engine    The engine to add the decorator to
 	 * @param decorator The decorator to add
 	 */
-	public static void registerDecorator(@NotNull SerializerEngine engine, @NotNull MessageDecorator decorator) {
-		if (engine instanceof DefaultSerializerEngine impl) {
-			impl.addDecorator(decorator);
-			return;
-		}
+    public static void registerDecorator(@NotNull SerializerEngine engine, @NotNull MessageDecorator decorator) {
+        if (engine instanceof DefaultSerializerEngine impl) {
+            impl.addDecorator(decorator);
+            return;
+        }
 
-		throw new IllegalArgumentException("Engine must be created via Serializers.createEngine()");
-	}
+        throw new IllegalArgumentException("Engine must be created via Serializers.createEngine()");
+    }
+
+    /**
+     * Adds a scoped decorator to an existing engine.
+     *
+     * @param engine    The engine to add the decorator to
+     * @param scope     The scope identifier (e.g., module name)
+     * @param decorator The decorator to add
+     */
+    public static void registerScopedDecorator(
+            @NotNull SerializerEngine engine,
+            @NotNull String scope,
+            @NotNull MessageDecorator decorator
+    ) {
+        if (engine instanceof DefaultSerializerEngine impl) {
+            impl.addDecorator(scope, decorator);
+            return;
+        }
+
+        throw new IllegalArgumentException("Engine must be created via Serializers.createEngine()");
+    }
 
 	/**
 	 * Registers all built-in adapters with the engine.
