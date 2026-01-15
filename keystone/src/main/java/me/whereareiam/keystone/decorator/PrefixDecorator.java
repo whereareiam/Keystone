@@ -1,4 +1,4 @@
-package me.whereareiam.keystone.common.serializer.decorator;
+package me.whereareiam.keystone.decorator;
 
 import me.whereareiam.keystone.model.SerializerContent;
 import me.whereareiam.keystone.serializer.MessageDecorator;

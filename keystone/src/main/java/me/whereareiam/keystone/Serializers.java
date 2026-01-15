@@ -2,8 +2,8 @@ package me.whereareiam.keystone;
 
 import me.whereareiam.keystone.common.serializer.DefaultSerializerEngine;
 import me.whereareiam.keystone.common.serializer.adapter.*;
-import me.whereareiam.keystone.common.serializer.decorator.PlayerNameDecorator;
-import me.whereareiam.keystone.common.serializer.decorator.PrefixDecorator;
+import me.whereareiam.keystone.decorator.PlayerNameDecorator;
+import me.whereareiam.keystone.decorator.PrefixDecorator;
 import me.whereareiam.keystone.model.SerializerOptions;
 import me.whereareiam.keystone.serializer.MessageDecorator;
 import me.whereareiam.keystone.serializer.SerializerAdapter;
