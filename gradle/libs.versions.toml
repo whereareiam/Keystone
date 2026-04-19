@@ -3,6 +3,8 @@
 # general
 lombok = "1.18.42"
 jetbrains-annotations = "26.0.2"
+junit-jupiter = "5.12.2"
+junit-platform = "1.12.2"
 
 # adventure
 adventure = "4.17.0"
@@ -16,6 +18,8 @@ adventure-plain = "4.17.0"
 # general
 lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
 jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains-annotations" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit-platform" }
 
 # adventure
 adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
