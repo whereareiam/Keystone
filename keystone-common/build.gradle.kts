@@ -1,21 +1,21 @@
-dependencies {
-    api(project(":keystone-api"))
-    
-    // Adventure serialization
-    "compileOnly"(rootProject.libs.adventure.minimessage)
-    "compileOnly"(rootProject.libs.adventure.gson)
-    "compileOnly"(rootProject.libs.adventure.legacy)
-    "compileOnly"(rootProject.libs.adventure.plain)
-
-    "testImplementation"(rootProject.libs.junit.jupiter)
-    "testImplementation"(rootProject.libs.adventure.minimessage)
-    "testImplementation"(rootProject.libs.adventure.legacy)
-    "testImplementation"(rootProject.libs.adventure.plain)
-    "testRuntimeOnly"(rootProject.libs.junit.platform.launcher)
+plugins {
+    id("keystone.java-common")
 }
 
-tasks.test {
-    useJUnitPlatform()
+dependencies {
+    api(project(":keystone-api"))
+
+    // Adventure serialization
+    compileOnly(libs.adventure.minimessage)
+    compileOnly(libs.adventure.gson)
+    compileOnly(libs.adventure.legacy)
+    compileOnly(libs.adventure.plain)
+
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.adventure.minimessage)
+    testImplementation(libs.adventure.legacy)
+    testImplementation(libs.adventure.plain)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 publishing {

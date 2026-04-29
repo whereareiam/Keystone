@@ -1,3 +1,7 @@
+plugins {
+    id("keystone.java-common")
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {

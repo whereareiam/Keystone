@@ -1,3 +1,7 @@
+plugins {
+    id("keystone.java-common")
+}
+
 dependencies {
     api(project(":keystone-api"))
     implementation(project(":keystone-common"))
