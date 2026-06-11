@@ -3,6 +3,7 @@ package me.whereareiam.keystone.serializer;
 import me.whereareiam.keystone.Actor;
 import me.whereareiam.keystone.model.SerializerContent;
 import me.whereareiam.keystone.model.SerializerOptions;
+import me.whereareiam.keystone.template.TemplateEngine;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +14,7 @@ import java.util.function.Consumer;
  * Handles placeholder replacement, prefix injection, and adapter selection.
  */
 @SuppressWarnings("unused")
-public interface SerializerEngine {
+public interface SerializerEngine extends TemplateEngine {
 	/**
 	 * Serializes a Component into a string using the configured adapter.
 	 *
@@ -126,4 +127,3 @@ public interface SerializerEngine {
 		return SerializerOptions.PlaceholderFormat.CURLY_BRACES;
 	}
 }
-

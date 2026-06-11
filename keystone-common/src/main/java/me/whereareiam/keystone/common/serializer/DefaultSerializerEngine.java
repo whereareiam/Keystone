@@ -78,34 +78,25 @@ public final class DefaultSerializerEngine implements SerializerEngine {
 	@Override
 	public Component serialize(@NotNull SerializerContent content) {
 		if (content.getMessage().isEmpty()) return Component.empty();
-
-        // Apply decorators first (prefix injection, integrations, etc.)
-        for (MessageDecorator decorator : decorators)
-            if (decorator.isAvailable())
-                content = decorator.decorate(content);
-
-        // Apply scoped decorators (if scope is set)
-        String scope = content.getScope();
-        if (scope != null && !scope.isBlank()) {
-            List<MessageDecorator> scoped = scopedDecorators.get(scope);
-            if (scoped != null) {
-                for (MessageDecorator decorator : scoped) {
-                    if (decorator.isAvailable())
-                        content = decorator.decorate(content);
-                }
-            }
-        }
-
-		// Apply placeholders with configured format
-		String message = content.getMessage();
-		for (Map.Entry<String, String> entry : content.getPlaceholders().entrySet()) {
-			String formattedPlaceholder = options.getPlaceholderFormat().format(entry.getKey());
-			message = message.replace(formattedPlaceholder, entry.getValue());
-		}
+		String message = renderTemplate(content);
 
 		SerializerAdapter adapter = getAdapter(options.getDefaultAdapterId());
 
 		return adapter.deserialize(message, options.isEnableLegacyColors());
+	}
+
+	@NotNull
+	@Override
+	public String renderTemplate(@NotNull SerializerContent content) {
+		SerializerContent decorated = decorate(content);
+		String message = decorated.getMessage();
+
+		for (Map.Entry<String, String> entry : decorated.getPlaceholders().entrySet()) {
+			String formattedPlaceholder = options.getPlaceholderFormat().format(entry.getKey());
+			message = message.replace(formattedPlaceholder, entry.getValue());
+		}
+
+		return message;
 	}
 
 	@NotNull
@@ -120,5 +111,25 @@ public final class DefaultSerializerEngine implements SerializerEngine {
 	public SerializerOptions.PlaceholderFormat getPlaceholderFormat() {
 		return options.getPlaceholderFormat();
 	}
-}
 
+	@NotNull
+	private SerializerContent decorate(@NotNull SerializerContent content) {
+		SerializerContent decorated = content;
+
+		for (MessageDecorator decorator : decorators)
+			if (decorator.isAvailable())
+				decorated = decorator.decorate(decorated);
+
+		String scope = decorated.getScope();
+		if (scope == null || scope.isBlank()) return decorated;
+
+		List<MessageDecorator> scoped = scopedDecorators.get(scope);
+		if (scoped == null) return decorated;
+
+		for (MessageDecorator decorator : scoped)
+			if (decorator.isAvailable())
+				decorated = decorator.decorate(decorated);
+
+		return decorated;
+	}
+}
