@@ -1,5 +1,6 @@
-package me.whereareiam.keystone.template;
+package me.whereareiam.keystone.template.message;
 
+import me.whereareiam.keystone.template.TemplateEngine;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;

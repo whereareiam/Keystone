@@ -1,9 +1,12 @@
 package me.whereareiam.keystone.template;
 
 import me.whereareiam.keystone.model.SerializerContent;
+import me.whereareiam.keystone.serializer.SerializerEngine;
+import me.whereareiam.keystone.template.message.MessageTemplate;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -74,5 +77,21 @@ public interface TemplateEngine {
 	@NotNull
 	default MessageTemplate template(@NotNull String template) {
 		return new MessageTemplate(this, template);
+	}
+
+	/**
+	 * Formats the placeholder token for the provided key.
+	 *
+	 * @param key Placeholder key without delimiters
+	 * @return The formatted placeholder token
+	 */
+	@NotNull
+	default String placeholder(@NotNull String key) {
+		Objects.requireNonNull(key, "key");
+
+		if (this instanceof SerializerEngine serializer)
+			return serializer.getPlaceholderFormat().format(key);
+
+		return "{" + key + "}";
 	}
 }

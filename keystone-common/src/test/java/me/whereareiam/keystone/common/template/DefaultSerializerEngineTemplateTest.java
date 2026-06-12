@@ -5,6 +5,7 @@ import me.whereareiam.keystone.model.SerializerContent;
 import me.whereareiam.keystone.model.SerializerOptions;
 import me.whereareiam.keystone.serializer.MessageDecorator;
 import me.whereareiam.keystone.common.serializer.adapter.PlainAdapter;
+import me.whereareiam.keystone.template.message.TemplateSection;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DefaultSerializerEngineTemplateTest {
 	@Test
@@ -71,6 +73,69 @@ class DefaultSerializerEngineTemplateTest {
 		engine.addDecorator(new StaticPlaceholderDecorator("prefix", "[Dev] "));
 
 		assertEquals("[Dev] Modules", engine.template("{prefix}Modules").render());
+	}
+
+	@Test
+	void templateSectionReplacesNamedSectionWhenPresent() {
+		DefaultSerializerEngine engine = createEngine(SerializerOptions.builder()
+				.defaultAdapter("plain")
+				.build());
+
+		assertEquals(
+				"Modules for Alex\ncore\nchat",
+				engine.template("Modules for {name}\n{entries}")
+						.placeholders(Map.of("name", "Alex"))
+						.section("entries", section -> section.lines(java.util.List.of("core", "chat")))
+						.render()
+		);
+	}
+
+	@Test
+	void templateSectionAppendsWhenMissing() {
+		DefaultSerializerEngine engine = createEngine(SerializerOptions.builder()
+				.defaultAdapter("plain")
+				.build());
+
+		assertEquals(
+				"Modules for Alex\ncore\nchat",
+				engine.template("Modules for {name}")
+						.placeholders(Map.of("name", "Alex"))
+						.section("entries", section -> section
+								.lines(java.util.List.of("core", "chat"))
+								.onMissing(TemplateSection.MissingSectionPolicy.APPEND))
+						.render()
+		);
+	}
+
+	@Test
+	void templateSectionUsesConfiguredPlaceholderFormat() {
+		DefaultSerializerEngine engine = createEngine(SerializerOptions.builder()
+				.defaultAdapter("plain")
+				.placeholderFormat(SerializerOptions.PlaceholderFormat.PERCENT)
+				.build());
+
+		assertEquals(
+				"Modules\ncore",
+				engine.template("Modules\n%entries%")
+						.section("entries", section -> section.text("core"))
+						.render()
+		);
+	}
+
+	@Test
+	void templateSectionCanFailWhenMissing() {
+		DefaultSerializerEngine engine = createEngine(SerializerOptions.builder()
+				.defaultAdapter("plain")
+				.build());
+
+		assertThrows(
+				IllegalStateException.class,
+				() -> engine.template("Modules")
+						.section("entries", section -> section
+								.text("core")
+								.onMissing(TemplateSection.MissingSectionPolicy.ERROR))
+						.render()
+		);
 	}
 
 	private DefaultSerializerEngine createEngine(SerializerOptions options) {
